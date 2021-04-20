@@ -29,7 +29,8 @@
 		<property name="maxIdleTime" value="1800"></property>
 	</bean>
 
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
 		<property name="hibernateProperties">
 			<props>
@@ -41,17 +42,16 @@
 		</property>
 		<property name="mappingLocations">
 			<list>
-				<value>classpath:cn/cedar/*/*/entity/*.hbm.xml</value>
+				<value>classpath:cn/tax/nsfw/*/entity/*.hbm.xml</value>
+				<value>classpath:cn/tax/test/entity/*.hbm.xml</value>
 			</list>
 		</property>
 	</bean>
-
 	<!-- 事务管理 -->
 	<bean id="txManager"
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
-
 	<!-- 事务通知 -->
 	<tx:advice id="txAdvice" transaction-manager="txManager">
 		<tx:attributes>
@@ -64,17 +64,16 @@
 
 	<!-- aop配置被事务控制的类 -->
 	<aop:config>
-		<aop:pointcut id="serviceOperation" expression="bean(*Service)" />
-			<!--扫描以Service结尾的bean -->
+		<aop:pointcut id="serviceOperation" expression="bean(*Service)" /><!-- 
+			扫描以Service结尾的bean -->
 		<!-- <aop:pointcut id="serviceOperation" expression="execution(* cn.itcast..service.impl.*.*(..))"/> -->
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />
 	</aop:config>
-	<!-- 集成注入所有的parent -->
+	<!-- 所有业务dao的parent -->
 	<bean id="baseDao" abstract="true">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
-	<!-- 引入外部spring配置文件 -->
-	<!-- <import resource="classpath:cn/cedar/*/conf/*-spring.xml" /> -->
-	<!-- 引入外部spring配置文件 -->
-	<import resource="classpath:cn/cedar/nsfw/*/conf/*-spring.xml" />
+	<!-- 引入外部Spring文件 -->
+	<import resource="classpath:cn/tax/*/conf/*-spring.xml" />
+	<import resource="classpath:cn/tax/nsfw/user/conf/*-spring.xml" />
 </beans>
